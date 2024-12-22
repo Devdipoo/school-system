@@ -1,68 +1,56 @@
-import React, { useState, useEffect } from "react";
-import { handleNoticePost, handleNoticeGet, handleNoticeDelete } from "../../fetching/fetch"; // Assuming getNotice is your fetch function
+import { useState } from "react";
 
 function AdminNotice() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [authority, setAuthority] = useState("");
-  const [publishedNotice, setPublishedNotice] = useState(null);
-  const [notices, setNotices] = useState([]);
+  const [notices, setNotices] = useState([
+    // Hardcoded notices (for demonstration purposes)
+    {
+      _id: "1",
+      title: "Notice 1",
+      date: "2024-12-21",
+      content: "Content of notice 1",
+      authority: "Principal",
+    },
+    {
+      _id: "2",
+      title: "Notice 2",
+      date: "2024-12-20",
+      content: "Content of notice 2",
+      authority: "Vice Principal",
+    },
+  ]);
 
-  useEffect(() => {
-    const fetchNotices = async () => {
-      try {
-        const response = await handleNoticeGet();
-        setNotices(response);
-        console.log("response of array :", response);
-      } catch (error) {
-        console.error("Failed to fetch notices:", error);
-      }
-    };
-
-    fetchNotices();
-  }, [publishedNotice]);
-
-  const handleDelete = async (noticeId) => {
-    console.log('here is the id', noticeId)
-    try {
-      const response = await handleNoticeDelete(noticeId);
-      console.log(response);
-      // Filter out the deleted notice from the notices state
-      const updatedNotices = notices.filter(notice => notice._id !== noticeId);
-      // Update the notices state with the filtered array
-      setNotices(updatedNotices);
-      alert("Notice deleted successfully!");
-    } catch (error) {
-      console.error("Failed to delete notice:", error);
-      alert("Error deleting notice");
-    }
+  const handleDelete = (noticeId) => {
+    // Filter out the deleted notice from the notices state
+    const updatedNotices = notices.filter((notice) => notice._id !== noticeId);
+    setNotices(updatedNotices);
+    alert("Notice deleted successfully!");
   };
 
-  const handlePublish = async (event) => {
+  const handlePublish = (event) => {
     event.preventDefault(); // Prevent the default form submit behavior
 
     const today = new Date().toISOString().slice(0, 10); // Gets today's date in YYYY-MM-DD format
 
     const noticeData = {
+      _id: new Date().getTime().toString(), // Generate a unique ID
       title,
-      dateOfIssue: today, // Assign today's date on submission
+      date: today,
       content,
       authority,
     };
 
-    try {
-      const response = await handleNoticePost(noticeData);
-      console.log(response);
-      setPublishedNotice(noticeData); // Update the UI with the notice details
-      alert("Notice published successfully!");
-      // Clear form fields
-      setTitle("");
-      setContent("");
-      setAuthority("");
-    } catch (error) {
-      console.error("Failed to publish notice:", error);
-      alert("Error publishing notice");
-    }
+    // Add the new notice to the notices state
+    setNotices([noticeData, ...notices]);
+
+    alert("Notice published successfully!");
+
+    // Clear form fields
+    setTitle("");
+    setContent("");
+    setAuthority("");
   };
 
   return (
@@ -121,14 +109,19 @@ function AdminNotice() {
             >
               <div className="flex justify-between">
                 <h2 className="text-xl font-semibold mb-2">{notice.title}</h2>
-                <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded" onClick={() => handleDelete(notice._id)}>delete</button>
+                <button
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+                  onClick={() => handleDelete(notice._id)}
+                >
+                  Delete
+                </button>
               </div>
               <p className="text-sm text-gray-600">
-                Date of Issue: {notice.date.substring(0, 10)}
+                Date of Issue: {notice.date}
               </p>
-              <p className="mt-4">{notice.details}</p>
+              <p className="mt-4">{notice.content}</p>
               <p className="text-sm text-gray-600 mt-4">
-                Issued by: {notice.post}
+                Issued by: {notice.authority}
               </p>
             </div>
           ))}

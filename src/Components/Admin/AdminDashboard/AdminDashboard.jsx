@@ -1,5 +1,3 @@
-import React from 'react'
-
 import DashboardPageComponents from '../../Common/dashboardPageComponents/DashboardPageComponents'
 import profileIcon from '../../../assets/profileIcon.svg'
 import attedenceIcon from '../../../assets/attendenceIcon.svg'
@@ -24,15 +22,15 @@ function AdminDashboard() {
       <DashboardPageComponents icon={attedenceIcon} title="Student Attendence" />
       <DashboardPageComponents icon={resultIcon} title="Student Result" />
       <DashboardPageComponents icon={timeTableIcon} title="Students Time Table" />
-      {/* <DashboardPageComponents icon={teacherSchedule} title="Teacher Time Table" /> */}
-      {/* <DashboardPageComponents icon={teacherAttendence} title="Attendence" />
+       <DashboardPageComponents icon={teacherSchedule} title="Teacher Time Table" /> 
+       <DashboardPageComponents icon={teacherAttendence} title="Attendence" />
       <DashboardPageComponents icon={feeCollectionIcon} title="Fee Collection" />
       <DashboardPageComponents icon={investmentRecordIcon} title="Investment" />
-      <DashboardPageComponents icon={salaryRecordIcon} title="Salary Record" /> */}
+      <DashboardPageComponents icon={salaryRecordIcon} title="Salary Record" /> 
       <DashboardPageComponents icon={assignmentIcon} title="Assignment" />
       <DashboardPageComponents icon={noticeIcon} title="Notice" />
-      {/* <DashboardPageComponents icon={teacherReviews} title="Reviews" />
-      <DashboardPageComponents icon={passwordChangeIcon} title="Change Password" /> */}
+       <DashboardPageComponents icon={teacherReviews} title="Reviews" />
+      <DashboardPageComponents icon={passwordChangeIcon} title="Change Password" /> 
     </div>
   )
 }

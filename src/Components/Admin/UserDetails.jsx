@@ -1,29 +1,35 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { handleGetUserDetail, handleGetUserProfile, handleDeleteUserProfile } from "../../fetching/fetch";
 import viewIcon from "../../assets/viewIcon.png";
 import deleteIcon from "../../assets/deleteIcon.png";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
 const UserDetails = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([
+    {
+      id: 1,
+      role: "Admin",
+      email: "admin@example.com",
+      createdAt: "2024-01-01",
+    },
+    {
+      id: 2,
+      role: "Teacher",
+      email: "teacher@example.com",
+      createdAt: "2023-12-15",
+    },
+    {
+      id: 3,
+      role: "Student",
+      email: "student@example.com",
+      createdAt: "2024-01-10",
+    },
+  ]);
+
   const [userProfile, setUserProfile] = useState(null);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userData = await handleGetUserDetail();
-        setUsers(userData);
-      } catch (error) {
-        console.error("Error fetching user details:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const columns = [
     { field: "role", headerName: "Role", width: 150 },
@@ -57,27 +63,28 @@ const UserDetails = () => {
     },
   ];
 
-  const handleViewProfile = async (row) => {
-    try {
-      const userProfileData = await handleGetUserProfile(row.email, row.role);
-      setUserProfile(userProfileData);
-      setOpen(true);
-    } catch (error) {
-      console.error("Error fetching user profile:", error);
-    }
+  // Handle view profile modal
+  const handleViewProfile = (row) => {
+    // Simulate fetching user profile details
+    const profile = {
+      email: row.email,
+      role: row.role,
+      name: row.role === "Admin" ? "Admin User" : row.role === "Teacher" ? "Mr. Smith" : "John Doe",
+      age: 30,
+      phone: "123-456-7890",
+      address: "123 Main St.",
+    };
+
+    setUserProfile(profile);
+    setOpen(true);
   };
 
-  const handleDeleteProfile = async (row) => {
-    try {
-      await handleDeleteUserProfile(row.email, row.role);
-      // Remove the deleted user from the users list
-      const updatedUsers = users.filter(user => user.email !== row.email);
-      setUsers(updatedUsers);
-      alert('User deleted successfully!');
-    } catch (error) {
-      console.error("Error deleting user profile:", error);
-      alert('Failed to delete user!');
-    }
+  // Handle delete profile
+  const handleDeleteProfile = (row) => {
+    // Simulate deleting the user profile
+    const updatedUsers = users.filter((user) => user.email !== row.email);
+    setUsers(updatedUsers);
+    alert("User deleted successfully!");
   };
 
   const handleClose = () => {
@@ -98,7 +105,7 @@ const UserDetails = () => {
               pageSize={5}
               checkboxSelection
               disableRowSelectionOnClick
-              getRowId={(row) => row._id}
+              getRowId={(row) => row.id}
             />
           </Box>
         </div>

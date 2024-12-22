@@ -1,24 +1,36 @@
-import React, { useState, useEffect } from "react";
-import { handleGetAssignmentByStudent } from "../../fetching/fetch";
+import { useState } from "react";
 
 function StudentAssignment() {
-  const [assignments, setAssignments] = useState([]);
   const [selectedSession, setSelectedSession] = useState("");
   const [selectedAssignment, setSelectedAssignment] = useState(null);
 
-  useEffect(() => {
-    const fetchAssignments = async () => {
-      if (selectedSession) {
-        try {
-          const response = await handleGetAssignmentByStudent(selectedSession);
-          setAssignments(response);
-        } catch (error) {
-          console.error("Error fetching assignments:", error);
-        }
-      }
-    };
-    fetchAssignments();
-  }, [selectedSession]);
+  const assignments = [
+    {
+      _id: "1",
+      title: "Math Assignment 1",
+      subject: "Mathematics",
+      description: "Solve the algebraic equations.",
+      deadline: "2024-12-31",
+    },
+    {
+      _id: "2",
+      title: "Physics Assignment 2",
+      subject: "Physics",
+      description: "Read chapters 4 and 5, and answer the questions.",
+      deadline: "2025-01-15",
+    },
+    {
+      _id: "3",
+      title: "Chemistry Lab Report",
+      subject: "Chemistry",
+      description: "Submit the lab report for the last experiment.",
+      deadline: "2024-12-25",
+    },
+  ];
+
+  const handleSessionChange = (e) => {
+    setSelectedSession(e.target.value);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -27,7 +39,7 @@ function StudentAssignment() {
       </h1>
       <select
         value={selectedSession}
-        onChange={(e) => setSelectedSession(e.target.value)}
+        onChange={handleSessionChange}
         className="block w-full p-3 border border-gray-300 rounded-md mb-8 shadow-md focus:outline-none focus:border-blue-500"
       >
         <option value="">Select Session</option>
@@ -41,9 +53,7 @@ function StudentAssignment() {
             key={assignment._id}
             className="border rounded-md p-6 bg-white shadow-md hover:shadow-lg transition duration-300 ease-in-out"
           >
-            <h2 className="text-xl font-semibold mb-4">
-              {assignment.title}
-            </h2>
+            <h2 className="text-xl font-semibold mb-4">{assignment.title}</h2>
             <p>Subject: {assignment.subject}</p>
             <p>Description: {assignment.description}</p>
             <p>Deadline: {assignment.deadline}</p>

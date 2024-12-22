@@ -3,11 +3,16 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
-import { handlePostStudentResult } from '../../fetching/fetch'
+import PropTypes from 'prop-types'  // Import PropTypes for prop validation
 
 const PostStudentResultModal = ({ status, initialValue, onClose }) => {
-   const { name, className, email } = initialValue
+  // Destructure name, className, and email from initialValue
+  const { name, className, email } = initialValue
+
+  // Modal open state
   const [open, setOpen] = React.useState(status)
+  
+  // Form state
   const [formData, setFormData] = React.useState({
     result: [
       {
@@ -22,19 +27,7 @@ const PostStudentResultModal = ({ status, initialValue, onClose }) => {
     ],
   })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
-  }
-
-  const handleClose = () => {
-    setOpen(false)
-    onClose()
-  }
-
+  // Handle form input change
   const handleResultChange = (index, e) => {
     const { name, value } = e.target
     const updatedResult = formData.result.map((subject, i) => {
@@ -53,22 +46,22 @@ const PostStudentResultModal = ({ status, initialValue, onClose }) => {
     })
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    console.log('FormData:', formData)
-    // Assuming you'll adjust handlePostStudentResult to not require removed fields
-    handlePostStudentResult(null, email, className, formData)
-      .then(() => {
-        console.log('successfully submit:')
-      })
-      .catch((error) => {
-        console.error('Error submitting form data:', error)
-      })
-      .finally(() => {
-        handleClose()
-      })
+  // Close modal
+  const handleClose = () => {
+    setOpen(false)
+    onClose()
   }
 
+  // Handle form submit
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log('FormData:', formData)
+    // For now, just log the data to the console
+    console.log('Form submitted successfully with data: ', formData)
+    handleClose()
+  }
+
+  // Add another subject to the result
   const addSubject = () => {
     setFormData({
       ...formData,
@@ -213,6 +206,17 @@ const PostStudentResultModal = ({ status, initialValue, onClose }) => {
       </Modal>
     </div>
   )
+}
+
+// Prop validation
+PostStudentResultModal.propTypes = {
+  status: PropTypes.bool.isRequired,
+  initialValue: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    className: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+  }).isRequired,
+  onClose: PropTypes.func.isRequired,
 }
 
 export default PostStudentResultModal

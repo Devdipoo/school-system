@@ -1,87 +1,65 @@
-import { useState, useEffect } from 'react'
-import { handleGetStudentAttendance } from '../../../fetching/fetch'
+import { useState } from 'react';
 
 function StudentAttendance() {
-  const [totalPresent, setTotalPresent] = useState(0)
-  const [totalAbsent, setTotalAbsent] = useState(0)
+  const [selectedSession, setSelectedSession] = useState(null);
 
-  const [selectedSession, setSelectedSession] = useState(null)
-  const [attendance, setAttendance] = useState(null)
+  // Hardcoded attendance data
+  const attendance = {
+    1: [true, true, false, true, true, true, false, true, true, false, true, false, true, false, true, false, true, true, true, true, true, false, true, true, false, true, true, false, true, false, true],
+    2: [true, true, true, false, true, true, true, true, false, true, true, false, true, true, true, true, true, true, false, true, false, true, false, true, true, true, false, true, false, true, false],
+    3: [true, false, true, true, false, true, true, true, true, true, false, true, false, true, true, false, true, true, true, false, false, true, true, true, false, true, true, true, false, true, false],
+    4: [false, true, true, true, true, false, true, true, true, true, true, true, false, true, true, true, true, false, true, false, true, true, true, true, true, true, true, true, false, true, true],
+  };
+
   const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ]
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ];
 
-  const sessionArray = [2000, 2001, 2002, 2024]
+  const sessionArray = [2000, 2001, 2002, 2024];
 
   const sessions = sessionArray.map((session) => (
     <option value={session} key={session}>
       {session}
     </option>
-  ))
+  ));
 
-  const handleSessionSelect = async (e) => {
-    const selectedSession = e.target.value
-    setSelectedSession(selectedSession)
-  }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (selectedSession) {
-        console.log(selectedSession)
-        try {
-          const response = await handleGetStudentAttendance(selectedSession)
-          console.log(response)
-          console.log(typeof response)
-          setAttendance(response)
-        } catch (error) {
-          console.error('Error fetching class data:', error)
-        }
-      }
-    }
-    fetchData()
-  }, [selectedSession])
+  const handleSessionSelect = (e) => {
+    setSelectedSession(e.target.value);
+  };
 
   const date = Array.from({ length: 31 }, (_, index) => (
     <th key={index + 1}>{index + 1}</th>
-  ))
+  ));
 
-  const monthAttendance = attendance ? Object.entries(attendance).map(([month, monthAttendance]) => {
-        let presentCount = 0
-        let absentCount = 0
+  const monthAttendance = selectedSession && attendance[selectedSession]
+    ? Object.entries({ 1: attendance[1], 2: attendance[2], 3: attendance[3], 4: attendance[4] }).map(
+        ([month, monthAttendance]) => {
+          let presentCount = 0;
+          let absentCount = 0;
 
-        const days = monthAttendance.map((day, index) => {
-          if (day === true) {
-            presentCount++
-            return <td key={index}>P</td>
-          } else if(day === false) {
-            absentCount++
-            return <td key={index}>A</td>
-          } else {
-            return <td>-</td>
-          }
-        })
+          const days = monthAttendance.map((day, index) => {
+            if (day === true) {
+              presentCount++;
+              return <td key={index}>P</td>;
+            } else if (day === false) {
+              absentCount++;
+              return <td key={index}>A</td>;
+            } else {
+              return <td key={index}>-</td>;
+            }
+          });
 
-        return (
-          <tr key={month}>
-            <td>{months[month - 1]}</td>
-            {days}
-            <td>{presentCount}</td>
-            <td>{absentCount}</td>
-          </tr>
-        )
-      })
-    : null
+          return (
+            <tr key={month}>
+              <td>{months[month - 1]}</td>
+              {days}
+              <td>{presentCount}</td>
+              <td>{absentCount}</td>
+            </tr>
+          );
+        }
+      )
+    : null;
 
   return (
     <div>
@@ -112,7 +90,7 @@ function StudentAttendance() {
         <tbody>{monthAttendance}</tbody>
       </table>
     </div>
-  )
+  );
 }
 
-export default StudentAttendance
+export default StudentAttendance;

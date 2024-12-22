@@ -1,124 +1,94 @@
-import * as React from 'react'
-import { useState, useEffect } from 'react'
-import {
-  handleGetClassData,
-  handleGetStudentAttendance,
-} from '../../fetching/fetch'
-import Box from '@mui/material/Box'
-import { DataGrid } from '@mui/x-data-grid'
-import viewIcon from '../../assets/viewIcon.png'
-import editIcon from '../../assets/editIcon.png'
-import ViewStudentAttendanceModal from '../Common/ViewStudentAttendanceModal'
-import PostStudentAttendanceModal from '../Common/PostStudentAttendanceModal'
+import { useState } from 'react';
+import Box from '@mui/material/Box';
+import { DataGrid } from '@mui/x-data-grid';
+import viewIcon from '../../assets/viewIcon.png';
+import editIcon from '../../assets/editIcon.png';
+import ViewStudentAttendanceModal from '../Common/ViewStudentAttendanceModal';
+import PostStudentAttendanceModal from '../Common/PostStudentAttendanceModal';
 
 function StudentAttendancePost() {
-  const [students, setStudents] = useState([])
-  const [selectedClass, setSelectedClass] = useState('')
-  const [selectedStudent, setSelectedStudent] = useState(null)
-  
-  
+  // Static array of students
+  const [selectedClass, setSelectedClass] = useState('');
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
-  const classArray = [1, 2, 3, 4, 5, 6, 7, 8]
+  const students = [
+    {
+      studentId: 1,
+      firstName: 'John',
+      lastName: 'Doe',
+      rollNo: '123',
+      email: 'john.doe@example.com',
+      studentClass: 7,
+      attendanceStatus: 'Present',
+    },
+    {
+      studentId: 2,
+      firstName: 'Jane',
+      lastName: 'Smith',
+      rollNo: '124',
+      email: 'jane.smith@example.com',
+      studentClass: 7,
+      attendanceStatus: 'Absent',
+    },
+    // Add more student records as needed
+  ];
+
+  const classArray = [1, 2, 3, 4, 5, 6, 7, 8];
 
   const studentClasses = classArray.map((studentClass) => (
     <option value={studentClass} key={studentClass}>
       {studentClass}
     </option>
-  ))
+  ));
 
-  const handleClassSelect = async (e) => {
-    const selectedClass = e.target.value
-    setSelectedClass(selectedClass)
-  }
+  const handleClassSelect = (e) => {
+    const selectedClass = e.target.value;
+    setSelectedClass(selectedClass);
+  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (selectedClass) {
-        try {
-          const response = await handleGetClassData(selectedClass)
-          const classData = response.map((student, index) => ({
-            ...student,
-            id: index + 1, // Add 1 to avoid zero-based indexing
-          }))
-          setStudents(classData)
-          console.log('classData obtained:', classData) // Access classData here
-        } catch (error) {
-          console.error('Error fetching class data:', error)
-        }
-      }
-    }
-    fetchData()
-  }, [selectedClass])
+  const displayViewAttendance = (params) => {
+    const studentDetail = {
+      name: params.firstName + ' ' + params.lastName,
+      studentClass: params.studentClass,
+      studentAttendance: {
+        status: params.attendanceStatus,
+        // Example attendance data
+        details: 'Attendance details here.',
+      },
+    };
 
-const displayViewAttendance = (params) => {
-  console.log('Params :', params)
-  handleGetStudentAttendance(null, params.email)
-    .then((studentAttendanceData) => {
+    setSelectedStudent(
+      <ViewStudentAttendanceModal
+        status={true}
+        initialValue={studentDetail}
+        onClose={() => setSelectedStudent(null)}
+      />
+    );
+  };
 
-      const studentDetail = {
-        name: params.firstName + ' ' + params.lastName,
-        studentClass: 7,
-        studentAttendance: studentAttendanceData,
-      }
+  const editAttendance = (params) => {
+    const studentDetail = {
+      name: params.firstName + ' ' + params.lastName,
+      className: params.studentClass,
+      email: params.email,
+      year: new Date().getFullYear(),
+    };
 
-      setSelectedStudent(
-        <ViewStudentAttendanceModal
-          status={true}
-          initialValue={studentDetail}
-          onClose={() => setSelectedStudent(null)}
-        />
-      )
-    })
-    .catch((error) => {
-      console.log('getting error in fetching student attendance detail', error)
-    })
-}
-
-const editAttendance = (params) => {
-  console.log("clicked on editIcon", params)
-  const studentDetail = {
-    name: params.firstName + ' ' + params.lastName,
-    className: params.studentClass,
-    email: params.email,
-    year: new Date().getFullYear(),
-  }
-      setSelectedStudent(
-        <PostStudentAttendanceModal
-          status={true}
-          initialValue={studentDetail}
-          onClose={() => setSelectedStudent(null)}
-        />
-      )
-
-}
-
+    setSelectedStudent(
+      <PostStudentAttendanceModal
+        status={true}
+        initialValue={studentDetail}
+        onClose={() => setSelectedStudent(null)}
+      />
+    );
+  };
 
   const columns = [
     { field: 'studentId', headerName: 'Student ID', width: 90 },
-    {
-      field: 'firstName',
-      headerName: 'First name',
-      width: 150,
-      editable: false,
-    },
-    {
-      field: 'lastName',
-      headerName: 'Last name',
-      width: 150,
-      editable: false,
-    },
-    {
-      field: 'rollNo',
-      headerName: 'Roll No',
-      width: 150,
-      editable: false,
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      width: 250,
-      editable: false,
-    },
+    { field: 'firstName', headerName: 'First name', width: 150, editable: false },
+    { field: 'lastName', headerName: 'Last name', width: 150, editable: false },
+    { field: 'rollNo', headerName: 'Roll No', width: 150, editable: false },
+    { field: 'email', headerName: 'Email', width: 250, editable: false },
     {
       field: 'attendanceStatus',
       headerName: 'Attendance Status',
@@ -140,7 +110,7 @@ const editAttendance = (params) => {
         </>
       ),
     },
-  ]
+  ];
 
   return (
     <div>
@@ -162,7 +132,7 @@ const editAttendance = (params) => {
 
       <Box sx={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={students}
+          rows={students.filter(student => student.studentClass === Number(selectedClass) || !selectedClass)}
           columns={columns}
           pageSize={5}
           checkboxSelection
@@ -171,7 +141,7 @@ const editAttendance = (params) => {
       </Box>
       {selectedStudent}
     </div>
-  )
+  );
 }
 
-export default StudentAttendancePost
+export default StudentAttendancePost;

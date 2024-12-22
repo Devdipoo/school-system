@@ -1,57 +1,38 @@
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import {setCretendials} from "../../Auth/auth"
-import schoolbackground from "../../assets/schoolbackground.jpg"
+import { useNavigate } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import schoolbackground from "../../assets/schoolbackground.jpg";
 
 function SignIn() {
-  const navigate = useNavigate()
-  const [error, setError] = useState(null)
+  const navigate = useNavigate(); // To navigate programmatically
+  // Removed the error state since it's not being used anymore
 
-  const handleSignIn = async (e) => {
-    e.preventDefault()
-
-    const formData = new FormData(e.target)
-    const data = {}
+  // This function is now only for UI demonstration and doesn't send requests.
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    // Simulating a successful sign-in process without backend calls
+    const formData = new FormData(e.target);
+    const data = {};
     formData.forEach((value, key) => {
-      data[key] = value
-    })
-  
+      data[key] = value;
+    });
 
-    try {
-      const response = await fetch('http://localhost:8000/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
+    // Simulate a successful login
+    console.log("User Email:", data.email);
+    console.log("User Password:", data.password);
+    
+    // Redirect to the "student" dashboard (or any other page) on successful sign-in simulation
+    // You can use `navigate` here if needed, but in this version, it's just static.
+    navigate('student'); // Navigate to teacher dashboard after successful sign-in
 
-      if (response.ok) {
-        const responseData = await response.json()
-        const {role, email, token} = responseData
-        console.log("here on sigin page :", email)
-        if(token && role && email) setCretendials(role, email, token)
-        navigate(`/${role}`)
-      } else {
-        const errorData = await response.json()
-        setError(errorData.message)
-      }
-    } catch (error) {
-      console.error('Error occurred during sign-in:', error)
-      setError('An error occurred during sign-in. Please try again.')
-    }
-  }
-
+  };
 
   return (
-    // <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <>
     <div className="flex min-h-screen">
       {/* Image Container */}
       <div className="w-1/2 flex justify-center items-center bg-gray-100">
         <img src={schoolbackground} alt="School Background" className="w-full h-full" />
       </div>
-  
+
       {/* Form Container */}
       <div className="w-1/2 flex justify-center items-center">
         <div className="max-w-md w-full space-y-8">
@@ -60,8 +41,8 @@ function SignIn() {
               Sign in to your account
             </h2>
           </div>
-          <form onSubmit={handleSignIn} className="mt-8 space-y-6" method="POST">
-            {/* Form fields and other elements */}
+          <form onSubmit={handleSignIn} className="mt-8 space-y-6">
+            {/* Form fields */}
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
                 <input
@@ -86,7 +67,7 @@ function SignIn() {
                 />
               </div>
             </div>
-            {/* Additional form elements */}
+            {/* Submit button */}
             <div>
               <button
                 type="submit"
@@ -97,7 +78,7 @@ function SignIn() {
             </div>
           </form>
           <div className="text-center text-sm">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link
               to="/signup"
               className="font-medium text-indigo-600 hover:text-indigo-500"
@@ -108,10 +89,7 @@ function SignIn() {
         </div>
       </div>
     </div>
-  </>
-  
-    // </div>
-  )
+  );
 }
 
-export default SignIn
+export default SignIn;

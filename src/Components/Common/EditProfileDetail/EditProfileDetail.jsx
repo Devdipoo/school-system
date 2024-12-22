@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import cutIcon from '../../../assets/cutIcon.svg';
-import { handleUpdateStudentProfile } from '../../../fetching/fetch';
 
 function EditProfileDetail({ initialValue, onClose, onUpdate }) {
   const [formData, setFormData] = useState(initialValue);
@@ -9,22 +9,11 @@ function EditProfileDetail({ initialValue, onClose, onUpdate }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (event) => {
-    console.log(formData);
+  const handleSubmit = (event) => {
     event.preventDefault();
-    try {
-      const response = await handleUpdateStudentProfile(formData);
-      console.log("Hello from editformdetail");
-      console.log(response);
-      if (response.status !== 201) {
-        throw new Error('Failed to submit form');
-      }
-      onUpdate(formData);
-    } catch (error) {
-      console.error('Error submitting form:', error);
-    }
+    console.log(formData);
+    onUpdate(formData);
   };
-  
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -76,5 +65,12 @@ function EditProfileDetail({ initialValue, onClose, onUpdate }) {
     </div>
   );
 }
+
+// PropTypes validation
+EditProfileDetail.propTypes = {
+  initialValue: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+};
 
 export default EditProfileDetail;

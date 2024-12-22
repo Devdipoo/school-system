@@ -1,24 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import profileImage from "../../../assets/profileImage.png";
-import axios from "axios";
-import { handleGetAdminProfile } from "../../../fetching/fetch";
 
 function AdminProfile() {
-  const [adminDetailInput, setAdminDetailInput] = useState([]);
+  // Hardcoded admin details
+  const [adminDetailInput] = useState([
+    {
+      name: "Admin Name",
+      post: "Administrator",
+      email: "admin@example.com",
+      phoneNumber: "123-456-7890",
+      _id: "12345", // Optional, can be removed if not necessary for the UI
+    }
+  ]);
   const [editProfile, setEditProfile] = useState(false);
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
-
-  useEffect(() => {
-    const fetchAdminProfile = async () => {
-      try {
-        const response = await handleGetAdminProfile();
-        setAdminDetailInput([response]);
-      } catch (error) {
-        console.error("Error fetching admin profile data:", error);
-      }
-    };
-    fetchAdminProfile();
-  }, []);
 
   const openEditProfileModal = () => {
     setNewPhoneNumber(adminDetailInput[0].phoneNumber);
@@ -31,22 +26,6 @@ function AdminProfile() {
 
   const handlePhoneNumberChange = (e) => {
     setNewPhoneNumber(e.target.value);
-  };
-
-  const updatePhoneNumber = async () => {
-    try {
-      console.log("id :",adminDetailInput[0]._id)
-      await axios.put(`http://localhost:8000/profile/admin/${adminDetailInput[0]._id}`, {
-        phoneNumber: newPhoneNumber,
-      });
-      setAdminDetailInput((prevData) => {
-        const updatedData = { ...prevData[0], phoneNumber: newPhoneNumber };
-        return [updatedData];
-      });
-      closeEditProfileModal();
-    } catch (error) {
-      console.error("Error updating phone number:", error);
-    }
   };
 
   return (
@@ -127,7 +106,10 @@ function AdminProfile() {
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
-                  onClick={updatePhoneNumber}
+                  onClick={() => {
+                    // Handle phone number update logic (UI update only)
+                    setEditProfile(false);
+                  }}
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-yellow-400 text-base font-medium text-white hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >

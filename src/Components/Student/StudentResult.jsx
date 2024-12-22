@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { handleGetStudentResult } from '../../fetching/fetch';
+
 
 function StudentResult() {
-  const [results, setResults] = useState([]);
-
-  useEffect(() => {
-    handleGetStudentResult()
-      .then((studentResultData) => {
-        setResults(studentResultData.result[0].result);
-      })
-      .catch((error) => {
-        console.log('Error fetching student result detail:', error);
-      });
-  }, []);
+  // Hardcoding some example data for the results
+  const results = [
+    {
+      subjectCode: 'CS101',
+      subjectName: 'Computer Science',
+      internalMarks: 35,
+      totalInternalMarks: 50,
+      externalMarks: 70,
+      totalExternalMarks: 100,
+    },
+    {
+      subjectCode: 'MA102',
+      subjectName: 'Mathematics',
+      internalMarks: 40,
+      totalInternalMarks: 50,
+      externalMarks: 80,
+      totalExternalMarks: 100,
+    },
+    // Add more data if needed
+  ];
 
   // Calculate total marks
   let totalInternalMarks = 0;
@@ -31,7 +39,6 @@ function StudentResult() {
     <div className="p-4">
       <h1 className="text-4xl font-normal">Student Results</h1>
       <table className="w-full p-2 divide-y mt-7 divide-gray-200 rounded-lg overflow-hidden">
-
         <thead className="bg-gray-50">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

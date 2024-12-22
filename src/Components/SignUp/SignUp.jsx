@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import {setCretendials} from "../../Auth/auth"
-import schoolbackground from "../../assets/schoolbackground.jpg"
+import schoolbackground from "../../assets/schoolbackground.jpg";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -22,9 +20,10 @@ function SignUp() {
     setRole(selectedRole);
   };
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = (e) => {
     e.preventDefault();
 
+    // Validate fields based on role
     switch (role) {
       case "admin":
         if (!name || !email || !post || !secretKey || !password) {
@@ -67,26 +66,11 @@ function SignUp() {
       ...(studentClass && { studentClass }),
     };
 
+    // Log the collected data (you can also show a success message here)
     console.log("Form data:", data);
 
-    try {
-      const response = await axios.post("http://localhost:8000/signup", data);
-      if (response.data.userDetailTosend && response.data.userDetailTosend.studentClass) {
-        console.log(response.data.userDetailTosend.studentClass);
-        setCretendials(null, null, null, response.data.userDetailTosend.studentClass);
-      }else{
-        setCretendials(null, null, null, null);
-      }
-      
-      if (response.status === 201) {
-        console.log("Signup successful");
-        navigate("/signin");
-      } else {
-        console.error("Signup failed");
-      }
-    } catch (error) {
-      console.error("Error occurred during signup:", error);
-    }
+    // Navigate to a different page (e.g., sign-in page after successful signup)
+    navigate("/signin");
   };
 
   const renderAdditionalFields = () => {
@@ -149,7 +133,7 @@ function SignUp() {
             </div>
           </>
         );
-        case "student":
+      case "student":
         return (
           <>
             <div className="mb-4">
@@ -199,7 +183,6 @@ function SignUp() {
             </div>
           </>
         );
-
       case "teacher":
         return (
           <>
@@ -256,14 +239,11 @@ function SignUp() {
   };
 
   return (
-    <>
     <div className="flex min-h-screen overflow-hidden">
-      {/* Image Container - Taking half of the screen */}
       <div className="w-1/2 flex justify-center items-center bg-gray-100">
         <img src={schoolbackground} alt="School Background" className="w-full h-full" />
       </div>
-  
-      {/* Form Container - Taking the other half of the screen */}
+
       <div className="w-1/2 flex justify-center items-center">
         <div className="max-w-md w-full space-y-8">
           <div>
@@ -304,9 +284,6 @@ function SignUp() {
         </div>
       </div>
     </div>
-  </>
-  
-  
   );
 }
 

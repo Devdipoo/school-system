@@ -1,4 +1,4 @@
-import * as React from 'react'
+
 import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import { DataGrid } from '@mui/x-data-grid'
@@ -7,7 +7,6 @@ import editIcon from '../../assets/editIcon.png'
 import deleteIcon from '../../assets/deleteIcon.png'
 import ViewStudentResultModal from '../Common/ViewStudentResultModal'
 import PostStudentResultModal from '../Common/PostStudentResultModal'
-import { handleGetClassData, handleGetStudentResult, handleResultDelete } from '../../fetching/fetch'
 
 function StudentResultPost() {
   const [students, setStudents] = useState([])

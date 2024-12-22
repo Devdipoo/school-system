@@ -1,4 +1,4 @@
-import React from 'react'
+
 import SideBarHeader from '../../Common/sideBarHeader/SideBarHeader'
 import SideBarComponent from '../../Common/sideBarComponent/SideBarComponent'
 
@@ -50,11 +50,11 @@ function StudentSideBar() {
         componentIcon={noticeIcon}
         to="/student/notice"
       />
-      {/* <SideBarComponent
+      <SideBarComponent
         componentName="Feedback"
         componentIcon={feedbackIcon}
         to="/student/feedback"
-      /> */}
+      />
     </div>
   )
 }

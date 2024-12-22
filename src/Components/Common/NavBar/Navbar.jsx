@@ -1,7 +1,4 @@
-import React from 'react'
-
 import './navbar.css'
-
 import searchIcon from '../../../assets/searchIcon.svg'
 import dropdownIcon from '../../../assets/dropdownIcon.svg'
 import profileImage from '../../../assets/profileImage.png'
@@ -25,8 +22,8 @@ function Navbar() {
       <div className="flex gap-6 mt-2">
         <div className="flex gap-2">
           <div>
-            <h1>Aditya</h1>
-            <p>Teacher</p>
+            <h1>My</h1>
+            <p>Profile</p>
           </div>
           <img
             className="h-3 w-3 mt-1"

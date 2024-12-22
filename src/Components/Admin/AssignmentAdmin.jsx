@@ -1,21 +1,38 @@
-import * as React from "react";
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import viewIcon from "../../assets/viewIcon.png";
 import deleteIcon from "../../assets/deleteIcon.png";
-import {
-  handleGetAssignment,
-  handleAssignmentDelete,
-} from "../../fetching/fetch";
 
 const AssignmentAdmin = () => {
   const [openModal, setOpenModal] = useState(false);
   const [currentAssignment, setCurrentAssignment] = useState({});
-  
-  // View Assignment
-  const [selectedSession, setSelectedSession] = useState("");
-  const [assignments, setAssignments] = useState([]);
+
+  // Static assignments data
+  const [assignments, setAssignments] = useState([
+    {
+      id: 1,
+      className: "10th Grade",
+      subject: "Math",
+      title: "Algebra Homework",
+      assignmentCode: "A101",
+      deadline: "2024-12-31",
+      teacherEmail: "teacher1@example.com",
+      description: "Solve all algebra problems on page 23",
+    },
+    {
+      id: 2,
+      className: "12th Grade",
+      subject: "Physics",
+      title: "Mechanics Assignment",
+      assignmentCode: "B202",
+      deadline: "2024-12-25",
+      teacherEmail: "teacher2@example.com",
+      description: "Read chapter 5 and complete the exercises",
+    },
+  ]);
+
   const yearArray = [2000, 2011, 2019, 2024];
 
   const years = yearArray.map((year) => (
@@ -24,44 +41,12 @@ const AssignmentAdmin = () => {
     </option>
   ));
 
-  const handleYearSelect = async (e) => {
-    const selectedYear = e.target.value;
-    setSelectedSession(selectedYear);
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (selectedSession) {
-        try {
-          const response = await handleGetAssignment(selectedSession);
-          const assignmentData = response.map((assignment, index) => ({
-            ...assignment,
-            id: index + 1, // Add 1 to avoid zero-based indexing
-          }));
-          setAssignments(assignmentData);
-        } catch (error) {
-          console.error("Error fetching assignment data:", error);
-        }
-      }
-    };
-    fetchData();
-  }, [selectedSession]);
-
-  const handleDeleteAssignment = async (params) => {
-    const assignmentId = params._id;
-    console.log("here is the id", assignmentId);
-    try {
-      const response = await handleAssignmentDelete(assignmentId);
-      console.log(response);
-      // If the assignment is deleted successfully, remove it from the assignments list
-      setAssignments((prevAssignments) =>
-        prevAssignments.filter((assignment) => assignment._id !== assignmentId)
-      );
-      alert("Assignment deleted successfully!");
-    } catch (error) {
-      console.error("Failed to delete Assignment:", error);
-      alert("Error deleting Assignment");
-    }
+  const handleDeleteAssignment = (params) => {
+    const assignmentId = params.id;
+    setAssignments((prevAssignments) =>
+      prevAssignments.filter((assignment) => assignment.id !== assignmentId)
+    );
+    alert("Assignment deleted successfully!");
   };
 
   const displayViewAssignment = (assignment) => {
@@ -100,11 +85,11 @@ const AssignmentAdmin = () => {
       editable: false,
     },
     {
-        field: "teacherEmail",
-        headerName: "Teacher Email",
-        width: 250,
-        editable: false,
-      },
+      field: "teacherEmail",
+      headerName: "Teacher Email",
+      width: 250,
+      editable: false,
+    },
     {
       field: "view Assignment",
       headerName: "View Assignment",
@@ -126,7 +111,7 @@ const AssignmentAdmin = () => {
         <img
           src={deleteIcon}
           onClick={() => handleDeleteAssignment(params.row)}
-          alt="view Icon"
+          alt="Delete Icon"
           style={{ width: 24, height: 24, cursor: "pointer" }}
         />
       ),
@@ -143,10 +128,7 @@ const AssignmentAdmin = () => {
               <label className="p-4 text-lg" htmlFor="Session">
                 Select Class
               </label>
-              <select
-                className="p-2 w-60 rounded-sm outline-none"
-                onChange={handleYearSelect}
-              >
+              <select className="p-2 w-60 rounded-sm outline-none">
                 <option value="">Select Session</option>
                 {years}
               </select>

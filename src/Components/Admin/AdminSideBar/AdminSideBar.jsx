@@ -1,5 +1,3 @@
-import React from 'react'
-
 import SideBarHeader from '../../Common/sideBarHeader/SideBarHeader'
 import SideBarComponent from '../../Common/sideBarComponent/SideBarComponent'
 import dashBoardIcon from "../../../assets/dashBoardIcon.svg"

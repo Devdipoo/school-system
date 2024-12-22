@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { handlePostStudentAttendance } from "../../fetching/fetch"; // Importing the API function
 
 const PostStudentAttendanceModal = ({ status, initialValue, onClose }) => {
   const [open, setOpen] = useState(status);
@@ -11,11 +10,8 @@ const PostStudentAttendanceModal = ({ status, initialValue, onClose }) => {
   const [presentCount, setPresentCount] = useState({});
   const [absentCount, setAbsentCount] = useState({});
 
-  console.log("Initial value of child: ", initialValue);
-  console.log('hey i am here')
-
   const { name, email, className } = initialValue;
- 
+
   const monthsWithDays = {
     Jan: 31,
     Feb: 28, // 29 in a leap year
@@ -34,27 +30,6 @@ const PostStudentAttendanceModal = ({ status, initialValue, onClose }) => {
   const handleClose = () => {
     setOpen(false);
     onClose();
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Form submitted");
-    console.log("Attendance data:", attendanceData);
-
-    try {
-      const response = await handlePostStudentAttendance(
-        email,
-        className,
-        attendanceData
-      );
-      console.log(response);
-      handleClose(); // Close the modal after successful submission
-    } catch (error) {
-      console.error(
-        "An error occurred while submitting attendance data:",
-        error
-      );
-    }
   };
 
   const handleCheckboxChange = (month, day) => {
@@ -91,9 +66,7 @@ const PostStudentAttendanceModal = ({ status, initialValue, onClose }) => {
             <td key={index + 1}>
               <input
                 type="checkbox"
-                checked={
-                  attendanceData[month] && attendanceData[month][index + 1]
-                }
+                checked={attendanceData[month] && attendanceData[month][index + 1]}
                 onChange={() => handleCheckboxChange(month, index + 1)}
               />
             </td>
@@ -119,7 +92,7 @@ const PostStudentAttendanceModal = ({ status, initialValue, onClose }) => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {name}
           </Typography>
-          <form className="flex flex-wrap" onSubmit={handleSubmit}>
+          <form className="flex flex-wrap">
             <table className="attendance-table m-10">
               <thead>
                 <tr>
@@ -132,8 +105,6 @@ const PostStudentAttendanceModal = ({ status, initialValue, onClose }) => {
               <tbody>{renderAttendanceTable()}</tbody>
             </table>
             <Button
-              type="submit"
-              // onClick={handleClose}
               variant="contained"
               color="primary"
             >
